@@ -11,10 +11,14 @@ export const useArtworks = () => {
       const { data, error } = await supabase
         .from("artworks")
         .select("*")
+        .order("order", { ascending: true, nullsFirst: false })
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      return (data || []).map((item) => ({
+        ...item,
+        order: item.order ?? 0,
+      }));
     },
   });
 };
@@ -28,10 +32,14 @@ export const usePublishedArtworks = () => {
         .from("artworks")
         .select("*")
         .eq("is_published", true)
+        .order("order", { ascending: true, nullsFirst: false })
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data || [];
+      return (data || []).map((item) => ({
+        ...item,
+        order: item.order ?? 0,
+      }));
     },
   });
 };
@@ -166,6 +174,40 @@ export const useDeleteArtwork = () => {
     },
     onError: (error: Error) => {
       toast.error(`작품 삭제 실패: ${error.message}`);
+    },
+  });
+};
+
+// Bulk update artwork order
+export const useUpdateArtworkOrder = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (updates: Array<{ id: string; order: number }>) => {
+      // Use Promise.all to update all artworks in parallel
+      const updatePromises = updates.map(({ id, order }) =>
+        supabase
+          .from("artworks")
+          .update({ order })
+          .eq("id", id)
+      );
+
+      const results = await Promise.all(updatePromises);
+      
+      // Check for any errors
+      const errors = results.filter((result) => result.error);
+      if (errors.length > 0) {
+        throw new Error(errors[0].error?.message || "순서 업데이트 실패");
+      }
+
+      return results;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["artworks"] });
+      toast.success("작품 순서가 저장되었습니다");
+    },
+    onError: (error: Error) => {
+      toast.error(`순서 저장 실패: ${error.message}`);
     },
   });
 };

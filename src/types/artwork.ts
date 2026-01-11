@@ -7,6 +7,7 @@ export interface Artwork {
   image_bucket: string;
   image_path: string;
   is_published: boolean;
+  order: number;
   created_at: string;
   updated_at: string;
 }

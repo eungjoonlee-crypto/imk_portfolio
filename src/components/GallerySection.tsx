@@ -69,9 +69,9 @@ const GallerySection = () => {
           </div>
         )}
 
-        {/* Artwork grid */}
+        {/* Artwork masonry grid */}
         {!isLoading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+          <div className="columns-1 md:columns-2 lg:columns-3" style={{ columnGap: '2rem' }}>
             {displayArtworks.map((artwork, index) => (
               <ArtworkCard key={artwork.id} {...artwork} index={index} />
             ))}

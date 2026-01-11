@@ -1,12 +1,17 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { Instagram, Mail, MapPin } from "lucide-react";
 
 const AboutSection = () => {
+  // 아티스트 포트레이트 이미지 URL (Supabase Storage)
+  const artistPortraitUrl = "https://gotdcbpobucrspqwyqgb.supabase.co/storage/v1/object/public/artworks/Enlight65.JPG";
+  const [imageError, setImageError] = useState(false);
+  
   return (
     <section id="about" className="py-32 px-8 md:px-16 lg:px-24 bg-secondary/30">
       <div className="max-w-7xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
-          {/* Artist image placeholder */}
+          {/* Artist image */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -15,14 +20,23 @@ const AboutSection = () => {
             className="relative"
           >
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-muted" style={{ boxShadow: "var(--shadow-soft)" }}>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="font-serif text-4xl text-primary">A</span>
+              {imageError ? (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center p-8">
+                    <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="font-serif text-4xl text-primary">A</span>
+                    </div>
+                    <p className="text-muted-foreground text-sm">Artist Portrait</p>
                   </div>
-                  <p className="text-muted-foreground text-sm">Artist Portrait</p>
                 </div>
-              </div>
+              ) : (
+                <img
+                  src={artistPortraitUrl}
+                  alt="Artist Portrait"
+                  className="w-full h-full object-cover"
+                  onError={() => setImageError(true)}
+                />
+              )}
             </div>
 
             {/* Experience badge */}
@@ -53,15 +67,15 @@ const AboutSection = () => {
             </div>
             
             <h2 className="font-serif text-5xl md:text-6xl text-foreground mb-8">
-              Aurora Chen
+              Kwon GyoDong
             </h2>
             
             <div className="space-y-5 text-muted-foreground leading-relaxed mb-10">
               <p>
-                Aurora Chen is a contemporary artist whose work explores the intersection of emotion and color through bold acrylic paintings. With over a decade of experience, her pieces have been featured in galleries across New York, London, and Tokyo.
+                색과 층위로 만든 기억의 파편
               </p>
               <p>
-                Her signature style combines thick impasto techniques with fluid color transitions, creating works that seem to glow from within. Each painting is a meditation on the human experience, inviting viewers to find their own meaning in the layers of pigment and light.
+                권교동은 헤어디자이너이자 페인팅 아티스트로, 아이엠케이를 운영하고 있다. 아이엠케이는 사람의 머릿결과 색감, 형태를 하나의 회화적 작품으로 표현한다. 그의 작품은 자라나고 떨어지기를 반복하는 머리처럼 가볍고도 묵직하며, 매일 마주해도 낯설 만큼 새롭다. 빠른 손끝으로 순간의 감정을 캔버스에 붙잡아두듯, 색과 레이어를 본능/감각적으로 쌓아 올린다. 서로 다른 사람들이 만나고 스쳐 지나가는 일상, 아주 사소한 감정들은 결국 장면이 되고, 아이엠케이의 세계가 완성된다.
               </p>
             </div>
 
@@ -93,7 +107,7 @@ const AboutSection = () => {
             {/* Location */}
             <div className="mt-8 flex items-center gap-2 text-muted-foreground">
               <MapPin className="w-4 h-4" />
-              <span className="text-sm">Based in New York City</span>
+              <span className="text-sm">Based in Hannam-dong, Seoul</span>
             </div>
           </motion.div>
         </div>

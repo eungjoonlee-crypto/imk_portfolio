@@ -12,10 +12,10 @@ const HeroBanner = () => {
           transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
         >
           <h1 className="font-serif text-[clamp(4rem,15vw,12rem)] leading-[0.85] text-primary tracking-tight">
-            Aurora
+            Kwon
           </h1>
-          <h1 className="font-serif text-[clamp(4rem,15vw,12rem)] leading-[0.85] text-primary tracking-tight -mt-2 md:-mt-4">
-            Chen
+          <h1 className="font-serif text-[clamp(4rem,15vw,12rem)] leading-[0.85] text-primary tracking-tight -mt-[7px] md:-mt-[15px]">
+            GyoDong
           </h1>
         </motion.div>
 
@@ -54,7 +54,7 @@ const HeroBanner = () => {
         <div className="flex items-center gap-4">
           <div className="w-12 h-px bg-primary" />
           <span className="text-sm font-medium tracking-widest uppercase text-muted-foreground">
-            March 2024 Solo Exhibition
+            March 2025 Solo Exhibition
           </span>
         </div>
       </motion.div>

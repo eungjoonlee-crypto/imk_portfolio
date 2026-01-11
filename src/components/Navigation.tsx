@@ -10,6 +10,30 @@ const Navigation = () => {
     { label: "Contact", href: "#contact" },
   ];
 
+  // Smooth scroll handler with offset for fixed navbar
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    if (href === '#') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    
+    const element = document.querySelector(href);
+    if (element) {
+      const offset = 80; // 네비게이션 높이 고려
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+    
+    // 모바일 메뉴 닫기
+    setIsOpen(false);
+  };
+
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
@@ -25,7 +49,7 @@ const Navigation = () => {
             whileHover={{ opacity: 0.7 }}
             transition={{ duration: 0.2 }}
           >
-            Aurora Chen
+            imkei
           </motion.a>
 
           {/* Desktop Navigation */}
@@ -34,6 +58,7 @@ const Navigation = () => {
               <motion.a
                 key={item.label}
                 href={item.href}
+                onClick={(e) => handleNavClick(e, item.href)}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors link-underline"
                 whileHover={{ y: -2 }}
                 transition={{ duration: 0.2 }}
@@ -68,7 +93,7 @@ const Navigation = () => {
               <a
                 key={item.label}
                 href={item.href}
-                onClick={() => setIsOpen(false)}
+                onClick={(e) => handleNavClick(e, item.href)}
                 className="font-serif text-2xl text-muted-foreground hover:text-foreground transition-colors"
               >
                 {item.label}

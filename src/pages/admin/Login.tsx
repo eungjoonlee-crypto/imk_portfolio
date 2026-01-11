@@ -59,6 +59,8 @@ const Login = () => {
         if (error) {
           if (error.message.includes("already registered")) {
             toast.error("이미 등록된 이메일입니다");
+          } else if (error.message.includes("관리자만")) {
+            toast.error(error.message);
           } else {
             toast.error(error.message);
           }
@@ -91,12 +93,14 @@ const Login = () => {
         className="w-full max-w-md"
       >
         {/* Header */}
-        <div className="text-center mb-10">
+          <div className="text-center mb-10">
           <h1 className="font-serif text-4xl text-foreground mb-3">
             Admin Portal
           </h1>
           <p className="text-muted-foreground">
-            {isLogin ? "관리자 계정으로 로그인하세요" : "새 관리자 계정 만들기"}
+            {isLogin 
+              ? "관리자 계정으로 로그인하세요" 
+              : "관리자 이메일만 회원가입 가능합니다"}
           </p>
         </div>
 

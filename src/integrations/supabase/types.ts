@@ -22,6 +22,7 @@ export type Database = {
           image_bucket: string
           image_path: string
           is_published: boolean | null
+          order: number | null
           tags: string[] | null
           title: string
           updated_at: string | null
@@ -34,6 +35,7 @@ export type Database = {
           image_bucket?: string
           image_path: string
           is_published?: boolean | null
+          order?: number | null
           tags?: string[] | null
           title: string
           updated_at?: string | null
@@ -46,6 +48,7 @@ export type Database = {
           image_bucket?: string
           image_path?: string
           is_published?: boolean | null
+          order?: number | null
           tags?: string[] | null
           title?: string
           updated_at?: string | null

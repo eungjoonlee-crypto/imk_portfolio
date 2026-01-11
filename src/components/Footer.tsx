@@ -13,7 +13,7 @@ const Footer = () => {
           {/* Logo & tagline */}
           <div>
             <a href="#" className="font-serif text-2xl text-foreground block mb-3">
-              Aurora Chen
+              Kwon GyoDong
             </a>
             <p className="text-sm text-muted-foreground max-w-xs">
               Contemporary acrylic art that captures emotion through color and texture.
