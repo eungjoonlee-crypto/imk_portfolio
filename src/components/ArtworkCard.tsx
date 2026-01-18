@@ -30,7 +30,7 @@ const ArtworkCard = ({ id, image, title, year, medium, index }: ArtworkCardProps
 
         {/* Card info */}
         <div className="p-5">
-          <h3 className="font-serif text-xl text-foreground mb-1">{title}</h3>
+          <h3 className="text-xl text-foreground mb-1" style={{ fontFamily: "'Noto Sans KR', sans-serif" }}>{title}</h3>
           <p className="text-sm text-muted-foreground">
             {medium}{year ? `, ${year}` : ""}
           </p>

@@ -39,4 +39,3 @@ Supabase Dashboard에서 확인:
 - 프로젝트 ID와 URL은 반드시 일치해야 합니다
 - Publishable Key도 올바른 프로젝트의 키여야 합니다
 - `.env` 파일은 Git에 커밋하지 마세요 (이미 .gitignore에 포함되어 있을 것입니다)
-

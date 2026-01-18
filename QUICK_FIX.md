@@ -34,4 +34,3 @@ npm run dev
 - ✅ URL과 프로젝트 ID가 일치해야 함
 - ✅ Publishable Key도 올바른 프로젝트의 키여야 함
 - ✅ `.env` 파일 저장 후 서버 재시작 필수
-

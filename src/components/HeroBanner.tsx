@@ -34,14 +34,36 @@ const HeroBanner = () => {
         </motion.p>
       </div>
 
-      {/* Floating artwork preview - right side */}
+      {/* Floating artwork banner - right side */}
       <motion.div
-        initial={{ opacity: 0, x: 100 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, x: 100, scale: 0.9 }}
+        animate={{ opacity: 1, x: 0, scale: 1 }}
         transition={{ duration: 1, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="absolute right-0 top-1/2 -translate-y-1/2 w-1/3 h-2/3 hidden lg:block"
+        className="absolute right-0 top-1/2 -translate-y-1/2 w-1/3 h-2/3 hidden lg:block pointer-events-none"
       >
-        <div className="w-full h-full bg-gradient-to-br from-muted to-secondary rounded-l-3xl opacity-60" />
+        <div className="relative w-full h-full" style={{ backgroundColor: "transparent" }}>
+          {/* IMK_HANNAM Banner Image - Supabase Storage */}
+          <img
+            src="https://gotdcbpobucrspqwyqgb.supabase.co/storage/v1/object/public/artworks/banner_0.png"
+            alt="IMK Hannam Atelier"
+            className="w-full h-full object-contain object-center"
+            style={{
+              filter: "brightness(0.95) contrast(1.05)",
+              mixBlendMode: "normal",
+            }}
+            onError={(e) => {
+              // 이미지 로드 실패 시 gradient fallback
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+              const parent = target.parentElement;
+              if (parent) {
+                const fallbackDiv = document.createElement('div');
+                fallbackDiv.className = "w-full h-full bg-gradient-to-br from-muted to-secondary rounded-l-3xl opacity-60";
+                parent.appendChild(fallbackDiv);
+              }
+            }}
+          />
+        </div>
       </motion.div>
 
       {/* Exhibition badge */}

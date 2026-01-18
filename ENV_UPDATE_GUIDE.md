@@ -25,4 +25,3 @@ VITE_SUPABASE_PUBLISHABLE_KEY="your_publishable_key_here"
 ## 주의사항
 - `.env` 파일을 수정한 후 개발 서버를 재시작해야 합니다
 - 프로젝트 ID와 URL은 일치해야 합니다
-

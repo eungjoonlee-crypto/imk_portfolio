@@ -17,4 +17,3 @@ SET "order" = (
 -- Add comment to explain the field
 COMMENT ON COLUMN public.artworks."order" IS 'Display order for artworks. Lower values appear first. Default step is 100 for flexibility.';
 
-

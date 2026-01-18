@@ -23,7 +23,7 @@ const Footer = () => {
           {/* Social links */}
           <div className="flex items-center gap-6">
             <motion.a
-              href="https://instagram.com"
+              href="https://www.instagram.com/imkhairshop?igsh=MWlsNmc5aTBvdXNtdA=="
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ y: -3 }}
@@ -32,7 +32,7 @@ const Footer = () => {
               <Instagram className="w-5 h-5" />
             </motion.a>
             <motion.a
-              href="mailto:hello@aurorastudio.art"
+              href="mailto:imkhannam@gmail.com"
               whileHover={{ y: -3 }}
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
@@ -55,7 +55,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="mt-16 pt-8 border-t border-border/50">
           <p className="text-sm text-muted-foreground">
-            © 2024 Aurora Chen Studio. All rights reserved.
+            © 2026 IMKEI. All rights reserved.
           </p>
         </div>
       </div>

@@ -4,7 +4,7 @@ import { Instagram, Mail, MapPin } from "lucide-react";
 
 const AboutSection = () => {
   // 아티스트 포트레이트 이미지 URL (Supabase Storage)
-  const artistPortraitUrl = "https://gotdcbpobucrspqwyqgb.supabase.co/storage/v1/object/public/artworks/Enlight65.JPG";
+  const artistPortraitUrl = "https://gotdcbpobucrspqwyqgb.supabase.co/storage/v1/object/public/artworks/imk_profile.JPG";
   const [imageError, setImageError] = useState(false);
   
   return (
@@ -72,7 +72,7 @@ const AboutSection = () => {
             
             <div className="space-y-5 text-muted-foreground leading-relaxed mb-10">
               <p>
-                색과 층위로 만든 기억의 파편
+                색감, 빛, 질감으로 기록하는 아이엠케이의 일상
               </p>
               <p>
                 권교동은 헤어디자이너이자 페인팅 아티스트로, 아이엠케이를 운영하고 있다. 아이엠케이는 사람의 머릿결과 색감, 형태를 하나의 회화적 작품으로 표현한다. 그의 작품은 자라나고 떨어지기를 반복하는 머리처럼 가볍고도 묵직하며, 매일 마주해도 낯설 만큼 새롭다. 빠른 손끝으로 순간의 감정을 캔버스에 붙잡아두듯, 색과 레이어를 본능/감각적으로 쌓아 올린다. 서로 다른 사람들이 만나고 스쳐 지나가는 일상, 아주 사소한 감정들은 결국 장면이 되고, 아이엠케이의 세계가 완성된다.
@@ -82,7 +82,7 @@ const AboutSection = () => {
             {/* Contact/Social links */}
             <div className="flex flex-wrap gap-4">
               <motion.a
-                href="https://instagram.com"
+                href="https://www.instagram.com/imkhairshop?igsh=MWlsNmc5aTBvdXNtdA=="
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.02 }}
@@ -90,11 +90,11 @@ const AboutSection = () => {
                 className="flex items-center gap-3 px-6 py-3 rounded-full bg-primary text-primary-foreground font-medium"
               >
                 <Instagram className="w-5 h-5" />
-                <span>@aurora.studio</span>
+                <span>imkhairshop</span>
               </motion.a>
               
               <motion.a
-                href="mailto:hello@aurorastudio.art"
+                href="mailto:imkhannam@gmail.com"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="flex items-center gap-3 px-6 py-3 rounded-full border border-border text-foreground font-medium hover:bg-secondary/50 transition-colors"

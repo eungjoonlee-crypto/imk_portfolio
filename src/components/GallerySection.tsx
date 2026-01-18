@@ -34,7 +34,7 @@ const GallerySection = () => {
     : fallbackArtworks;
 
   return (
-    <section id="gallery" className="py-32 px-8 md:px-16 lg:px-24">
+    <section id="gallery" className="py-[126px] px-8 md:px-16 lg:px-24">
       <div className="max-w-7xl mx-auto">
         {/* Section header */}
         <motion.div
@@ -77,23 +77,6 @@ const GallerySection = () => {
             ))}
           </div>
         )}
-
-        {/* View more button */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="text-center mt-20"
-        >
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="px-8 py-4 rounded-full border border-border text-foreground font-medium hover:bg-secondary/50 transition-colors"
-          >
-            View Full Collection
-          </motion.button>
-        </motion.div>
       </div>
     </section>
   );
