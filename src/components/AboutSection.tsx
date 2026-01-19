@@ -21,14 +21,14 @@ const AboutSection = () => {
           >
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-muted" style={{ boxShadow: "var(--shadow-soft)" }}>
               {imageError ? (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="font-serif text-4xl text-primary">A</span>
-                    </div>
-                    <p className="text-muted-foreground text-sm">Artist Portrait</p>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-center p-8">
+                  <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="font-serif text-4xl text-primary">A</span>
                   </div>
+                  <p className="text-muted-foreground text-sm">Artist Portrait</p>
                 </div>
+              </div>
               ) : (
                 <img
                   src={artistPortraitUrl}
@@ -75,7 +75,7 @@ const AboutSection = () => {
                 색감, 빛, 질감으로 기록하는 아이엠케이의 일상
               </p>
               <p>
-                권교동은 헤어디자이너이자 페인팅 아티스트로, 아이엠케이를 운영하고 있다. 아이엠케이는 사람의 머릿결과 색감, 형태를 하나의 회화적 작품으로 표현한다. 그의 작품은 자라나고 떨어지기를 반복하는 머리처럼 가볍고도 묵직하며, 매일 마주해도 낯설 만큼 새롭다. 빠른 손끝으로 순간의 감정을 캔버스에 붙잡아두듯, 색과 레이어를 본능/감각적으로 쌓아 올린다. 서로 다른 사람들이 만나고 스쳐 지나가는 일상, 아주 사소한 감정들은 결국 장면이 되고, 아이엠케이의 세계가 완성된다.
+                권교동은 헤어디자이너이자 페인팅 아티스트로, 서울 한남동에서 아이엠케이를 운영하고 있다. 아이엠케이는 사람의 머릿결과 색감, 형태를 하나의 회화적 작품으로 표현한다. 그의 작품은 마치 헤어처럼 복잡한 층위와 색감을 가벼운 터치로 표현한다. 빠른 손끝으로 순간의 감정을 캔버스에 붙잡아두듯, 색과 레이어를 감각적으로 쌓아 올린다. 누구나 쉽게 감상할 수 있고, 그때마다 다른 뉘앙스와 새로운 감정을 불러낸다. 서로 다른 사람들이 만나고 스쳐 지나가는 일상과 아주 사소한 감정들은 결국 장면이 되고, 아이엠케이의 또 다른 그림이 완성된다.
               </p>
             </div>
 
