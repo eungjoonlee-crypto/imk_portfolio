@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 import ArtworkCard from "./ArtworkCard";
 import { usePublishedArtworks, getImageUrl } from "@/hooks/useArtworks";
 
@@ -19,19 +20,35 @@ const fallbackArtworks = [
   { id: "6", image: artwork6, title: "Verdant Spiral", year: "2024", medium: "Acrylic on canvas" },
 ];
 
+// Fisher-Yates 셔플 알고리즘을 사용한 랜덤 정렬 함수
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array]; // 원본 배열을 변경하지 않기 위해 복사
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 const GallerySection = () => {
   const { data: artworks, isLoading, error } = usePublishedArtworks();
 
   // Use database artworks if available, otherwise use fallback
-  const displayArtworks = artworks && artworks.length > 0
-    ? artworks.map((artwork) => ({
-        id: artwork.id,
-        image: getImageUrl(artwork.image_path),
-        title: artwork.title,
-        year: artwork.year || "",
-        medium: artwork.description || "Acrylic on canvas",
-      }))
-    : fallbackArtworks;
+  // useMemo를 사용하여 컴포넌트가 마운트될 때마다 랜덤하게 섞음
+  const displayArtworks = useMemo(() => {
+    const baseArtworks = artworks && artworks.length > 0
+      ? artworks.map((artwork) => ({
+          id: artwork.id,
+          image: getImageUrl(artwork.image_path),
+          title: artwork.title,
+          year: artwork.year || "",
+          medium: artwork.description || "Acrylic on canvas",
+        }))
+      : fallbackArtworks;
+    
+    // 새로고침할 때마다 다른 순서로 보이도록 랜덤하게 섞기
+    return shuffleArray(baseArtworks);
+  }, [artworks]); // artworks가 변경될 때만 재계산
 
   return (
     <section id="gallery" className="py-[126px] px-8 md:px-16 lg:px-24">

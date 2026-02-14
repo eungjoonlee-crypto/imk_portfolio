@@ -76,7 +76,7 @@ const HeroBanner = () => {
         <div className="flex items-center gap-4">
           <div className="w-12 h-px bg-primary" />
           <span className="text-sm font-medium tracking-widest uppercase text-muted-foreground">
-            March 2025 Solo Exhibition
+            March 2026 Solo Exhibition (3.3~3.31)
           </span>
         </div>
       </motion.div>
