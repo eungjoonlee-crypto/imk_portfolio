@@ -9,14 +9,15 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Artwork } from "@/types/artwork";
-import { getImageUrl } from "@/hooks/useArtworks";
+import { getArtworkImageSrc } from "@/hooks/useArtworks";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 const artworkSchema = z.object({
   title: z.string().min(1, "제목을 입력해주세요").max(100, "제목은 100자 이하로 입력해주세요"),
-  description: z.string().max(1000, "설명은 1000자 이하로 입력해주세요").optional(),
+  description: z.string().max(500, "규격·소재는 500자 이하로 입력해주세요").optional(),
+  body: z.string().max(2000, "본문 설명은 2000자 이하로 입력해주세요").optional(),
   year: z.string().max(10, "연도는 10자 이하로 입력해주세요").optional(),
   tags: z.string().optional(),
   is_published: z.boolean(),
@@ -46,6 +47,7 @@ const ArtworkForm = ({ artwork, onSubmit, isSubmitting }: ArtworkFormProps) => {
     defaultValues: {
       title: artwork?.title || "",
       description: artwork?.description || "",
+      body: artwork?.body ?? "",
       year: artwork?.year || "",
       tags: artwork?.tags?.join(", ") || "",
       is_published: artwork?.is_published ?? true,
@@ -55,8 +57,8 @@ const ArtworkForm = ({ artwork, onSubmit, isSubmitting }: ArtworkFormProps) => {
   const isPublished = watch("is_published");
 
   useEffect(() => {
-    if (artwork?.image_path) {
-      setImagePreview(getImageUrl(artwork.image_path));
+    if (artwork) {
+      setImagePreview(getArtworkImageSrc(artwork));
     }
   }, [artwork]);
 
@@ -84,7 +86,7 @@ const ArtworkForm = ({ artwork, onSubmit, isSubmitting }: ArtworkFormProps) => {
 
   const removeImage = () => {
     setImageFile(null);
-    setImagePreview(artwork?.image_path ? getImageUrl(artwork.image_path) : null);
+    setImagePreview(artwork ? getArtworkImageSrc(artwork) : null);
   };
 
   const handleFormSubmit = async (data: FormData) => {
@@ -158,17 +160,32 @@ const ArtworkForm = ({ artwork, onSubmit, isSubmitting }: ArtworkFormProps) => {
         )}
       </div>
 
-      {/* Description */}
+      {/* 규격·소재 (description) */}
       <div className="space-y-2">
-        <Label htmlFor="description">설명</Label>
-        <Textarea
+        <Label htmlFor="description">규격·소재</Label>
+        <Input
           id="description"
-          placeholder="작품에 대한 설명을 입력하세요"
-          rows={4}
+          placeholder="예: 캔버스에 유채, 90×70cm"
           {...register("description")}
         />
+        <p className="text-xs text-muted-foreground">갤러리 카드와 뷰어 부제목에 표시됩니다</p>
         {errors.description && (
           <p className="text-sm text-destructive">{errors.description.message}</p>
+        )}
+      </div>
+
+      {/* 본문 설명 (body) */}
+      <div className="space-y-2">
+        <Label htmlFor="body">본문 설명</Label>
+        <Textarea
+          id="body"
+          placeholder="작품에 대한 본문 설명을 입력하세요 (뷰어에서만 표시)"
+          rows={5}
+          {...register("body")}
+        />
+        <p className="text-xs text-muted-foreground">갤러리에서 작품 클릭 시 뷰어에만 표시됩니다. 줄바꿈 가능</p>
+        {errors.body && (
+          <p className="text-sm text-destructive">{errors.body.message}</p>
         )}
       </div>
 

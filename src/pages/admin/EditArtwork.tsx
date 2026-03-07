@@ -13,7 +13,7 @@ const EditArtwork = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (
-    data: { title: string; description?: string; year?: string; tags?: string; is_published: boolean },
+    data: { title: string; description?: string; body?: string; year?: string; tags?: string; is_published: boolean },
     imageFile?: File
   ) => {
     if (!artwork || !id) return;
@@ -46,6 +46,7 @@ const EditArtwork = () => {
         id,
         title: data.title,
         description: data.description || null,
+        body: data.body || null,
         year: data.year || null,
         tags,
         image_path: imagePath,

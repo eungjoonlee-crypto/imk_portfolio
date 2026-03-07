@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Pencil, Trash2, Search, ArrowUpDown, Eye, EyeOff, GripVertical, Save } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, ArrowUpDown, Eye, EyeOff, GripVertical, Save, ImageIcon } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -23,6 +23,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,20 +34,32 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useArtworks, useDeleteArtwork, useUpdateArtwork, useUpdateArtworkOrder, getImageUrl } from "@/hooks/useArtworks";
+import { useArtworks, useDeleteArtwork, useUpdateArtwork, useUpdateArtworkOrder, getArtworkImageSrc } from "@/hooks/useArtworks";
 import { Artwork } from "@/types/artwork";
 
 type SortOrder = "order" | "newest" | "oldest" | "title";
 
+const THUMBNAIL_STORAGE_KEY = "admin:disableThumbnails";
+
+function loadDisableThumbnails(): boolean {
+  try {
+    const v = localStorage.getItem(THUMBNAIL_STORAGE_KEY);
+    return v !== null ? JSON.parse(v) : true;
+  } catch {
+    return true;
+  }
+}
+
 // Sortable Artwork Card Component
 interface SortableArtworkCardProps {
   artwork: Artwork;
+  disableThumbnails: boolean;
   onTogglePublished: (id: string, currentStatus: boolean) => void;
   onDelete: (id: string, imagePath: string) => void;
   updateArtwork: ReturnType<typeof useUpdateArtwork>;
 }
 
-const SortableArtworkCard = ({ artwork, onTogglePublished, onDelete, updateArtwork }: SortableArtworkCardProps) => {
+const SortableArtworkCard = ({ artwork, disableThumbnails, onTogglePublished, onDelete, updateArtwork }: SortableArtworkCardProps) => {
   const {
     attributes,
     listeners,
@@ -81,13 +94,20 @@ const SortableArtworkCard = ({ artwork, onTogglePublished, onDelete, updateArtwo
       </div>
 
       {/* Image */}
-      <div className="relative aspect-[4/5] overflow-hidden">
-        <img
-          src={getImageUrl(artwork.image_path)}
-          alt={artwork.title}
-          className="w-full h-full object-cover"
-        />
-        
+      <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+        {disableThumbnails ? (
+          <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground">
+            <ImageIcon className="h-10 w-10" />
+            <span className="text-xs">No preview</span>
+          </div>
+        ) : (
+          <img
+            src={getArtworkImageSrc(artwork)}
+            alt={artwork.title}
+            className="w-full h-full object-cover"
+          />
+        )}
+
         {/* Published Badge */}
         <div className="absolute top-3 left-3">
           <span
@@ -167,12 +187,19 @@ const Dashboard = () => {
   const deleteArtwork = useDeleteArtwork();
   const updateArtwork = useUpdateArtwork();
   const updateArtworkOrder = useUpdateArtworkOrder();
-  
+
+  const [disableThumbnails, setDisableThumbnails] = useState<boolean>(() => loadDisableThumbnails());
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState<SortOrder>("order");
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; imagePath: string } | null>(null);
   const [localArtworks, setLocalArtworks] = useState<Artwork[]>([]);
   const [hasOrderChanges, setHasOrderChanges] = useState(false);
+
+  const handleThumbnailToggle = (checked: boolean) => {
+    const next = !checked;
+    setDisableThumbnails(next);
+    localStorage.setItem(THUMBNAIL_STORAGE_KEY, JSON.stringify(next));
+  };
 
   // Initialize local artworks when artworks data changes
   useEffect(() => {
@@ -319,6 +346,18 @@ const Dashboard = () => {
           </Button>
         )}
 
+        {/* Thumbnail loading toggle */}
+        <div className="flex items-center gap-2">
+          <Label htmlFor="thumb-toggle" className="text-sm whitespace-nowrap cursor-pointer">
+            썸네일 로딩
+          </Label>
+          <Switch
+            id="thumb-toggle"
+            checked={!disableThumbnails}
+            onCheckedChange={handleThumbnailToggle}
+          />
+        </div>
+
         {/* Add New */}
         <Button asChild>
           <Link to="/admin/new">
@@ -327,6 +366,10 @@ const Dashboard = () => {
           </Link>
         </Button>
       </div>
+
+      <p className="text-sm text-muted-foreground mb-4">
+        트래픽 절감을 위해 썸네일 로딩을 비활성화할 수 있습니다.
+      </p>
 
       {/* Info Message for Order Mode */}
       {sortOrder === "order" && (
@@ -372,6 +415,7 @@ const Dashboard = () => {
                   <SortableArtworkCard
                     key={artwork.id}
                     artwork={artwork}
+                    disableThumbnails={disableThumbnails}
                     onTogglePublished={handleTogglePublished}
                     onDelete={(id, imagePath) => setDeleteTarget({ id, imagePath })}
                     updateArtwork={updateArtwork}
@@ -395,13 +439,20 @@ const Dashboard = () => {
                 className="bg-card border border-border overflow-hidden group"
               >
                 {/* Image */}
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  <img
-                    src={getImageUrl(artwork.image_path)}
-                    alt={artwork.title}
-                    className="w-full h-full object-cover"
-                  />
-                  
+                <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                  {disableThumbnails ? (
+                    <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground">
+                      <ImageIcon className="h-10 w-10" />
+                      <span className="text-xs">No preview</span>
+                    </div>
+                  ) : (
+                    <img
+                      src={getArtworkImageSrc(artwork)}
+                      alt={artwork.title}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+
                   {/* Published Badge */}
                   <div className="absolute top-3 left-3">
                     <span

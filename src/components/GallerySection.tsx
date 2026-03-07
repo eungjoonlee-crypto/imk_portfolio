@@ -1,7 +1,9 @@
+import { useState, useMemo } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
-import { useMemo } from "react";
 import ArtworkCard from "./ArtworkCard";
-import { usePublishedArtworks, getImageUrl } from "@/hooks/useArtworks";
+import { ArtworkViewer, type GalleryArtwork } from "./ArtworkViewer";
+import { usePublishedArtworks, getArtworkImageSrc } from "@/hooks/useArtworks";
 
 // Fallback images for when database is empty
 import artwork1 from "@/assets/artwork-1.jpg";
@@ -11,13 +13,13 @@ import artwork4 from "@/assets/artwork-4.jpg";
 import artwork5 from "@/assets/artwork-5.jpg";
 import artwork6 from "@/assets/artwork-6.jpg";
 
-const fallbackArtworks = [
-  { id: "1", image: artwork1, title: "Phoenix Rising", year: "2024", medium: "Acrylic on canvas" },
-  { id: "2", image: artwork2, title: "Ocean Depths", year: "2024", medium: "Acrylic on canvas" },
-  { id: "3", image: artwork3, title: "Sunset Boulevard", year: "2023", medium: "Acrylic on canvas" },
-  { id: "4", image: artwork4, title: "Midnight Gold", year: "2023", medium: "Acrylic on canvas" },
-  { id: "5", image: artwork5, title: "Earth & Light", year: "2023", medium: "Acrylic on canvas" },
-  { id: "6", image: artwork6, title: "Verdant Spiral", year: "2024", medium: "Acrylic on canvas" },
+const fallbackArtworks: GalleryArtwork[] = [
+  { id: "1", image: artwork1, title: "Phoenix Rising", year: "2024", medium: "Acrylic on canvas", body: null },
+  { id: "2", image: artwork2, title: "Ocean Depths", year: "2024", medium: "Acrylic on canvas", body: null },
+  { id: "3", image: artwork3, title: "Sunset Boulevard", year: "2023", medium: "Acrylic on canvas", body: null },
+  { id: "4", image: artwork4, title: "Midnight Gold", year: "2023", medium: "Acrylic on canvas", body: null },
+  { id: "5", image: artwork5, title: "Earth & Light", year: "2023", medium: "Acrylic on canvas", body: null },
+  { id: "6", image: artwork6, title: "Verdant Spiral", year: "2024", medium: "Acrylic on canvas", body: null },
 ];
 
 // Fisher-Yates 셔플 알고리즘을 사용한 랜덤 정렬 함수
@@ -32,23 +34,28 @@ const shuffleArray = <T,>(array: T[]): T[] => {
 
 const GallerySection = () => {
   const { data: artworks, isLoading, error } = usePublishedArtworks();
+  const [viewerIndex, setViewerIndex] = useState<number | null>(null);
 
   // Use database artworks if available, otherwise use fallback
   // useMemo를 사용하여 컴포넌트가 마운트될 때마다 랜덤하게 섞음
-  const displayArtworks = useMemo(() => {
-    const baseArtworks = artworks && artworks.length > 0
-      ? artworks.map((artwork) => ({
-          id: artwork.id,
-          image: getImageUrl(artwork.image_path),
-          title: artwork.title,
-          year: artwork.year || "",
-          medium: artwork.description || "Acrylic on canvas",
-        }))
-      : fallbackArtworks;
-    
-    // 새로고침할 때마다 다른 순서로 보이도록 랜덤하게 섞기
+  const displayArtworks = useMemo((): GalleryArtwork[] => {
+    const baseArtworks: GalleryArtwork[] =
+      artworks && artworks.length > 0
+        ? artworks.map((artwork) => ({
+            id: artwork.id,
+            image: getArtworkImageSrc(artwork),
+            title: artwork.title,
+            year: artwork.year || "",
+            medium: artwork.description || "",
+            body: artwork.body ?? null,
+          }))
+        : fallbackArtworks;
+
     return shuffleArray(baseArtworks);
-  }, [artworks]); // artworks가 변경될 때만 재계산
+  }, [artworks]);
+
+  const openViewer = (index: number) => setViewerIndex(index);
+  const closeViewer = () => setViewerIndex(null);
 
   return (
     <section id="gallery" className="py-[126px] px-8 md:px-16 lg:px-24">
@@ -86,13 +93,43 @@ const GallerySection = () => {
           </div>
         )}
 
-        {/* Artwork masonry grid */}
+        {/* Artwork grid - grid 사용, pointer-events 명시로 클릭 보장 */}
         {!isLoading && !error && (
-          <div className="columns-1 md:columns-2 lg:columns-3" style={{ columnGap: '2rem' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 pointer-events-auto">
             {displayArtworks.map((artwork, index) => (
-              <ArtworkCard key={artwork.id} {...artwork} index={index} />
+              <ArtworkCard
+                key={artwork.id}
+                id={artwork.id}
+                image={artwork.image}
+                title={artwork.title}
+                year={artwork.year}
+                medium={artwork.medium}
+                index={index}
+                onClick={() => openViewer(index)}
+              />
             ))}
           </div>
+        )}
+
+        {/* Lightbox viewer - body로 포탈, AnimatePresence 제거해 마운트 안정화 */}
+        {createPortal(
+          viewerIndex !== null ? (
+            <motion.div
+              key="artwork-viewer"
+              className="fixed inset-0 z-[9999] flex flex-col"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ArtworkViewer
+                artworks={displayArtworks}
+                currentIndex={viewerIndex}
+                onClose={closeViewer}
+                onNavigate={setViewerIndex}
+              />
+            </motion.div>
+          ) : null,
+          document.body
         )}
       </div>
     </section>

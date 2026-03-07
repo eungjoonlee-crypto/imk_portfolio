@@ -18,6 +18,7 @@ export const useArtworks = () => {
       return (data || []).map((item) => ({
         ...item,
         order: item.order ?? 0,
+        body: (item as Artwork).body ?? null,
       }));
     },
   });
@@ -39,6 +40,7 @@ export const usePublishedArtworks = () => {
       return (data || []).map((item) => ({
         ...item,
         order: item.order ?? 0,
+        body: (item as Artwork).body ?? null,
       }));
     },
   });
@@ -85,6 +87,14 @@ export const getImageUrl = (imagePath: string): string => {
     .from("artworks")
     .getPublicUrl(imagePath);
   return data.publicUrl;
+};
+
+// Resolve final image URL (prefer Vercel Blob URL when present)
+export const getArtworkImageSrc = (artwork: Artwork): string => {
+  if (artwork.image_url) {
+    return artwork.image_url;
+  }
+  return getImageUrl(artwork.image_path);
 };
 
 // Delete image from storage
