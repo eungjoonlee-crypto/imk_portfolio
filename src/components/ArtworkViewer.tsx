@@ -78,44 +78,46 @@ export const ArtworkViewer = ({
   if (!artwork) return null;
 
   return (
-    <div className="absolute inset-0 flex flex-col">
-      {/* Backdrop: dimmed + blurred gallery */}
+    <div className="absolute inset-0 flex flex-col min-h-[100dvh] md:min-h-0">
+      {/* Backdrop */}
       <button
         type="button"
         aria-label="Close"
-        className="absolute inset-0 bg-black/35 backdrop-blur-[6px]"
+        className="absolute inset-0 bg-black/35 backdrop-blur-[6px] md:backdrop-blur-[6px]"
         onClick={onClose}
       />
 
-      {/* Content container: centered panel (z-0 so 닫기 버튼이 위에 보이도록) */}
+      {/* Content container: 모바일 풀스크린 시트, 데스크톱 중앙 패널 */}
       <div
-        className="relative z-0 flex flex-1 min-h-0 items-center justify-center p-4 pt-14 pb-24 md:p-8 md:pt-16 md:pb-28"
+        className="relative z-0 flex flex-1 min-h-0 items-center justify-center p-0 pt-12 pb-24 md:p-8 md:pt-16 md:pb-28"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
         <motion.div
           key={artwork.id}
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -8 }}
+          exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="flex flex-col md:flex-row md:max-w-5xl w-full h-full max-h-[85vh] md:max-h-[80vh] bg-card/95 backdrop-blur-sm rounded-lg overflow-hidden border border-border shadow-2xl"
+          className="flex flex-col md:flex-row md:max-w-5xl w-full h-full max-h-[90dvh] md:max-h-[80vh] bg-card/95 backdrop-blur-sm rounded-t-2xl md:rounded-lg overflow-hidden border border-border shadow-2xl"
         >
-          {/* Image area */}
-          <div className="relative flex-shrink-0 md:w-[55%] min-h-[40vh] md:min-h-0 bg-muted">
+          {/* Image: 모바일에서 비율 고정, 데스크톱 55% */}
+          <div className="relative flex-shrink-0 md:w-[55%] min-h-[35vh] max-h-[45vh] md:max-h-none md:min-h-0 bg-muted">
             <img
               src={artwork.image}
               alt={artwork.title}
-              className="w-full h-full object-contain object-center"
+              className="w-full h-full object-contain object-center select-none"
               draggable={false}
             />
           </div>
 
-          {/* Text + CTA area */}
-          <div className="flex flex-col flex-1 min-h-0 p-6 md:p-8 overflow-y-auto">
-            <div className="flex-1 space-y-4">
+          {/* Text + CTA: 모바일에서 스크롤, 터치 스크롤 부드럽게 */}
+          <div
+            className="flex flex-col flex-1 min-h-0 p-5 md:p-8 overflow-y-auto overflow-x-hidden overscroll-contain [touch-action:pan-y] [-webkit-overflow-scrolling:touch]"
+          >
+            <div className="flex-1 space-y-3 md:space-y-4 min-h-0">
               <h2
-                className="font-serif text-2xl md:text-3xl text-foreground leading-tight"
+                className="font-serif text-xl md:text-3xl text-foreground leading-tight"
                 style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
               >
                 {artwork.title}
@@ -125,17 +127,17 @@ export const ArtworkViewer = ({
                 {artwork.year ? ` · ${artwork.year}` : ""}
               </p>
               {artwork.body && (
-                <p className="text-[15px] text-foreground/90 leading-relaxed whitespace-pre-line">
+                <p className="text-base md:text-[15px] text-foreground/90 leading-relaxed whitespace-pre-line">
                   {artwork.body}
                 </p>
               )}
             </div>
 
-            {/* Sticky CTA on mobile, natural on desktop */}
-            <div className="mt-6 pt-6 border-t border-border flex-shrink-0">
+            {/* CTA: 모바일에서 하단 고정 느낌, 터치 타깃 44px 이상 */}
+            <div className="mt-5 pt-5 border-t border-border flex-shrink-0 pb-6">
               <Button
                 variant="outline"
-                className="w-full md:w-auto border-primary/40 text-primary hover:bg-primary/10 hover:text-primary font-medium"
+                className="w-full md:w-auto min-h-[44px] px-6 py-3 text-base border-primary/40 text-primary hover:bg-primary/10 hover:text-primary font-medium [touch-action:manipulation]"
                 onClick={() => window.open(INSTAGRAM_DM_URL, "_blank", "noopener,noreferrer")}
               >
                 구매 문의하기
@@ -144,44 +146,43 @@ export const ArtworkViewer = ({
           </div>
         </motion.div>
 
-        {/* Prev / Next arrows */}
+        {/* Prev / Next: 모바일에서 터치 타깃 44px, 이미지 영역 옆에 배치 */}
         {total > 1 && (
           <>
-            <Button
-              variant="ghost"
-              size="icon"
+            <button
+              type="button"
               aria-label="이전 작품"
-              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 rounded-full h-11 w-11 bg-background/80 backdrop-blur-sm text-muted-foreground hover:text-foreground hover:bg-background/90 border border-border/50"
               onClick={goPrev}
+              className="absolute left-2 md:left-4 top-[40%] md:top-1/2 -translate-y-1/2 z-10 rounded-full min-w-[44px] min-h-[44px] h-11 w-11 md:h-11 md:w-11 flex items-center justify-center bg-background/90 backdrop-blur-sm text-muted-foreground hover:text-foreground active:bg-background border border-border/50 [touch-action:manipulation]"
             >
               <ChevronLeft className="h-6 w-6" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
+            </button>
+            <button
+              type="button"
               aria-label="다음 작품"
-              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 rounded-full h-11 w-11 bg-background/80 backdrop-blur-sm text-muted-foreground hover:text-foreground hover:bg-background/90 border border-border/50"
               onClick={goNext}
+              className="absolute right-2 md:right-4 top-[40%] md:top-1/2 -translate-y-1/2 z-10 rounded-full min-w-[44px] min-h-[44px] h-11 w-11 md:h-11 md:w-11 flex items-center justify-center bg-background/90 backdrop-blur-sm text-muted-foreground hover:text-foreground active:bg-background border border-border/50 [touch-action:manipulation]"
             >
               <ChevronRight className="h-6 w-6" />
-            </Button>
+            </button>
           </>
         )}
 
-        {/* Position indicator */}
+        {/* Position indicator: 모바일에서 하단 고정 영역 위 */}
         {total > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-sm text-muted-foreground/90">
+          <div className="absolute bottom-20 md:bottom-4 left-1/2 -translate-x-1/2 z-10 text-sm text-muted-foreground/90 bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full">
             {currentIndex + 1} / {total}
           </div>
         )}
       </div>
 
-      {/* 닫기 버튼: 최상단 레이어로 클릭 보장 */}
+      {/* 닫기 버튼: 모바일 44px 터치 타깃, safe area */}
       <button
         type="button"
         onClick={onClose}
         aria-label="닫기"
-        className="absolute top-4 right-4 z-[100] flex h-10 w-10 items-center justify-center rounded-full bg-background/90 backdrop-blur-sm text-muted-foreground hover:text-foreground hover:bg-background border border-border/50 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="absolute top-4 right-4 z-[100] flex min-w-[44px] min-h-[44px] h-12 w-12 md:h-10 md:w-10 items-center justify-center rounded-full bg-background/90 backdrop-blur-sm text-muted-foreground hover:text-foreground active:bg-background border border-border/50 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring [touch-action:manipulation]"
+        style={{ top: "max(1rem, env(safe-area-inset-top))" }}
       >
         <X className="h-5 w-5" />
       </button>

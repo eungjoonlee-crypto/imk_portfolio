@@ -38,18 +38,6 @@ const AboutSection = () => {
                 />
               )}
             </div>
-
-            {/* Experience badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="absolute -bottom-6 -right-6 md:right-6 bg-background rounded-xl p-5 shadow-lg"
-            >
-              <span className="font-serif text-3xl text-primary block">10+</span>
-              <span className="text-sm text-muted-foreground">Years of Art</span>
-            </motion.div>
           </motion.div>
 
           {/* Content */}
