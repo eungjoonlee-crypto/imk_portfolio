@@ -23,7 +23,7 @@ const ArtworkCard = ({ image, title, year, medium, index, onClick }: ArtworkCard
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), onClick?.())}
-      className="relative z-10 mb-8 lg:mb-10 overflow-hidden bg-card cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-shadow hover:shadow-[var(--shadow-hover)] [touch-action:manipulation]"
+      className="relative z-10 overflow-hidden bg-card cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 transition-shadow hover:shadow-[var(--shadow-hover)] [touch-action:manipulation]"
       style={{ boxShadow: "var(--shadow-card)" }}
       initial={{ opacity: 0, y: 60 }}
       whileInView={{ opacity: 1, y: 0 }}

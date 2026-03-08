@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import ArtworkCard from "./ArtworkCard";
 import { ArtworkViewer, type GalleryArtwork } from "./ArtworkViewer";
 import { usePublishedArtworks, getArtworkImageSrc } from "@/hooks/useArtworks";
+import { useColumnCount } from "@/hooks/use-column-count";
 
 // Fallback images for when database is empty
 import artwork1 from "@/assets/artwork-1.jpg";
@@ -32,9 +33,23 @@ const shuffleArray = <T,>(array: T[]): T[] => {
   return shuffled;
 };
 
+/** Masonry: 컬럼 수에 따라 (작품, 원본인덱스)를 열 단위로 나눔 */
+function splitIntoColumnsWithIndices<T>(
+  items: T[],
+  columnCount: number
+): { artwork: T; originalIndex: number }[][] {
+  const columns: { artwork: T; originalIndex: number }[][] = Array.from(
+    { length: columnCount },
+    () => []
+  );
+  items.forEach((item, i) => columns[i % columnCount].push({ artwork: item, originalIndex: i }));
+  return columns;
+}
+
 const GallerySection = () => {
   const { data: artworks, isLoading, error } = usePublishedArtworks();
   const [viewerIndex, setViewerIndex] = useState<number | null>(null);
+  const columnCount = useColumnCount();
 
   // Use database artworks if available, otherwise use fallback
   // useMemo를 사용하여 컴포넌트가 마운트될 때마다 랜덤하게 섞음
@@ -57,6 +72,12 @@ const GallerySection = () => {
 
   const openViewer = (index: number) => setViewerIndex(index);
   const closeViewer = () => setViewerIndex(null);
+
+  // Masonry: 컬럼별로 나눈 배열 (각 컬럼은 { artwork, originalIndex }[])
+  const columnsWithIndices = useMemo(
+    () => splitIntoColumnsWithIndices(displayArtworks, columnCount),
+    [displayArtworks, columnCount]
+  );
 
   return (
     <section id="gallery" className="py-[126px] px-8 md:px-16 lg:px-24">
@@ -94,20 +115,27 @@ const GallerySection = () => {
           </div>
         )}
 
-        {/* Artwork grid - grid 사용, pointer-events 명시로 클릭 보장 */}
+        {/* Masonry: 컬럼별 flex로 높이 차이 시 빈 공간 없이 자연스럽게 배치 */}
         {!isLoading && !error && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 pointer-events-auto">
-            {displayArtworks.map((artwork, index) => (
-              <ArtworkCard
-                key={artwork.id}
-                id={artwork.id}
-                image={artwork.image}
-                title={artwork.title}
-                year={artwork.year}
-                medium={artwork.medium}
-                index={index}
-                onClick={() => openViewer(index)}
-              />
+            {columnsWithIndices.map((column, colIndex) => (
+              <div
+                key={colIndex}
+                className="flex flex-col gap-8 lg:gap-10"
+              >
+                {column.map(({ artwork, originalIndex }) => (
+                  <ArtworkCard
+                    key={artwork.id}
+                    id={artwork.id}
+                    image={artwork.image}
+                    title={artwork.title}
+                    year={artwork.year}
+                    medium={artwork.medium}
+                    index={originalIndex}
+                    onClick={() => openViewer(originalIndex)}
+                  />
+                ))}
+              </div>
             ))}
           </div>
         )}
