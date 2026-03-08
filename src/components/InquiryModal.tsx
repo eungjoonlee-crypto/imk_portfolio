@@ -9,10 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/lib/supabaseClient";
 import type { GalleryArtwork } from "./ArtworkViewer";
-
-const INQUIRY_EMAIL = "imkhannam@gmail.com";
-const FORMSPREE_FORM_ID = import.meta.env.VITE_INQUIRY_FORM_ID;
 
 interface InquiryModalProps {
   open: boolean;
@@ -54,45 +52,22 @@ export const InquiryModal = ({ open, onOpenChange, artwork }: InquiryModalProps)
     setStatus("sending");
     setErrorMessage("");
 
-    const body = [
-      `작품: ${artwork.title}`,
-      `가격: ${priceText}`,
-      `이름: ${name.trim() || "-"}`,
-      `전화: ${phone.trim() || "-"}`,
-      `이메일: ${email.trim() || "-"}`,
-      message.trim() ? `\n문의 내용:\n${message.trim()}` : "",
-    ].join("\n");
-
-    if (FORMSPREE_FORM_ID) {
-      try {
-        const res = await fetch(`https://formspree.io/f/${FORMSPREE_FORM_ID}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            _replyto: email.trim() || undefined,
-            _subject: `[작품 문의] ${artwork.title}`,
-            artwork_title: artwork.title,
-            price_display: priceText,
-            name: name.trim(),
-            phone: phone.trim(),
-            email: email.trim(),
-            message: message.trim(),
-            body,
-          }),
-        });
-        if (!res.ok) throw new Error("전송 실패");
-        setStatus("success");
-      } catch {
-        setStatus("error");
-        setErrorMessage("전송에 실패했습니다. 잠시 후 다시 시도해 주세요.");
-      }
-      return;
+    try {
+      const { error } = await supabase.from("inquiries").insert({
+        artwork_id: artwork.id,
+        artwork_title: artwork.title,
+        price_display: priceText,
+        name: name.trim() || null,
+        phone: phone.trim() || null,
+        email: email.trim() || null,
+        message: message.trim() || null,
+      });
+      if (error) throw error;
+      setStatus("success");
+    } catch {
+      setStatus("error");
+      setErrorMessage("전송에 실패했습니다. 잠시 후 다시 시도해 주세요.");
     }
-
-    // Formspree 미설정 시 mailto로 열기
-    const mailto = `mailto:${INQUIRY_EMAIL}?subject=${encodeURIComponent(`[작품 문의] ${artwork.title}`)}&body=${encodeURIComponent(body)}`;
-    window.open(mailto, "_blank");
-    setStatus("success");
   };
 
   return (
@@ -104,12 +79,7 @@ export const InquiryModal = ({ open, onOpenChange, artwork }: InquiryModalProps)
 
         {status === "success" ? (
           <div className="py-6 text-center text-muted-foreground">
-            <p className="font-medium text-foreground">문의가 접수되었습니다.</p>
-            <p className="mt-2 text-sm">
-              {FORMSPREE_FORM_ID
-                ? "이메일로 연락드리겠습니다."
-                : "메일 앱이 열렸다면 전송 버튼을 눌러 주세요."}
-            </p>
+            <p className="font-medium text-foreground">문의내용이 확인되면 연락드리겠습니다.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">

@@ -62,6 +62,42 @@ export type Database = {
         }
         Relationships: []
       }
+      inquiries: {
+        Row: {
+          id: string
+          artwork_id: string | null
+          artwork_title: string
+          price_display: string | null
+          name: string | null
+          phone: string | null
+          email: string | null
+          message: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          artwork_id?: string | null
+          artwork_title: string
+          price_display?: string | null
+          name?: string | null
+          phone?: string | null
+          email?: string | null
+          message?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          artwork_id?: string | null
+          artwork_title?: string
+          price_display?: string | null
+          name?: string | null
+          phone?: string | null
+          email?: string | null
+          message?: string | null
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
