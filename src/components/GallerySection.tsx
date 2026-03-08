@@ -33,6 +33,9 @@ const shuffleArray = <T,>(array: T[]): T[] => {
   return shuffled;
 };
 
+/** 레이아웃 균형을 위해 항상 마지막에 노출할 작품 제목 (쉼표 구분 또는 배열) */
+const PIN_TO_END_TITLES: string[] = ["해바라기"];
+
 /** Masonry: 컬럼 수에 따라 (작품, 원본인덱스)를 열 단위로 나눔 */
 function splitIntoColumnsWithIndices<T>(
   items: T[],
@@ -52,7 +55,7 @@ const GallerySection = () => {
   const columnCount = useColumnCount();
 
   // Use database artworks if available, otherwise use fallback
-  // useMemo를 사용하여 컴포넌트가 마운트될 때마다 랜덤하게 섞음
+  // useMemo: 랜덤 셔플 후, PIN_TO_END_TITLES에 해당하는 작품은 항상 마지막에 배치
   const displayArtworks = useMemo((): GalleryArtwork[] => {
     const baseArtworks: GalleryArtwork[] =
       artworks && artworks.length > 0
@@ -67,7 +70,11 @@ const GallerySection = () => {
           }))
         : fallbackArtworks;
 
-    return shuffleArray(baseArtworks);
+    const shuffled = shuffleArray(baseArtworks);
+    const pinSet = new Set(PIN_TO_END_TITLES.map((t) => t.trim()).filter(Boolean));
+    const pinned = shuffled.filter((a) => pinSet.has(a.title));
+    const rest = shuffled.filter((a) => !pinSet.has(a.title));
+    return [...rest, ...pinned];
   }, [artworks]);
 
   const openViewer = (index: number) => setViewerIndex(index);
