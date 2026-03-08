@@ -11,7 +11,7 @@ const NewArtwork = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (
-    data: { title: string; description?: string; body?: string; year?: string; tags?: string; is_published: boolean },
+    data: { title: string; description?: string; body?: string; price_display?: string; year?: string; tags?: string; is_published: boolean },
     imageFile?: File
   ) => {
     if (!imageFile) {
@@ -35,6 +35,7 @@ const NewArtwork = () => {
         title: data.title,
         description: data.description || null,
         body: data.body || null,
+        price_display: data.price_display?.trim() || null,
         year: data.year || null,
         tags,
         image_bucket: "artworks",

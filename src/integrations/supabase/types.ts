@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       artworks: {
         Row: {
+          body: string | null
           created_at: string | null
           description: string | null
           id: string
@@ -23,12 +24,14 @@ export type Database = {
           image_path: string
           is_published: boolean | null
           order: number | null
+          price_display: string | null
           tags: string[] | null
           title: string
           updated_at: string | null
           year: string | null
         }
         Insert: {
+          body?: string | null
           created_at?: string | null
           description?: string | null
           id?: string
@@ -36,12 +39,14 @@ export type Database = {
           image_path: string
           is_published?: boolean | null
           order?: number | null
+          price_display?: string | null
           tags?: string[] | null
           title: string
           updated_at?: string | null
           year?: string | null
         }
         Update: {
+          body?: string | null
           created_at?: string | null
           description?: string | null
           id?: string
@@ -49,6 +54,7 @@ export type Database = {
           image_path?: string
           is_published?: boolean | null
           order?: number | null
+          price_display?: string | null
           tags?: string[] | null
           title?: string
           updated_at?: string | null

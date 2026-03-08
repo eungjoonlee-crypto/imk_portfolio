@@ -48,6 +48,7 @@ const GallerySection = () => {
             year: artwork.year || "",
             medium: artwork.description || "",
             body: artwork.body ?? null,
+            price_display: artwork.price_display ?? null,
           }))
         : fallbackArtworks;
 

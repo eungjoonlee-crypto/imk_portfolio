@@ -5,6 +5,8 @@ export interface Artwork {
   description: string | null;
   /** 본문 설명 (뷰어에서만 표시) */
   body: string | null;
+  /** 가격 표시 (문의 모달에서만 공개) */
+  price_display?: string | null;
   year: string | null;
   tags: string[] | null;
   image_bucket: string;

@@ -18,6 +18,7 @@ const artworkSchema = z.object({
   title: z.string().min(1, "제목을 입력해주세요").max(100, "제목은 100자 이하로 입력해주세요"),
   description: z.string().max(500, "규격·소재는 500자 이하로 입력해주세요").optional(),
   body: z.string().max(2000, "본문 설명은 2000자 이하로 입력해주세요").optional(),
+  price_display: z.string().max(100, "가격 표시는 100자 이하로 입력해주세요").optional(),
   year: z.string().max(10, "연도는 10자 이하로 입력해주세요").optional(),
   tags: z.string().optional(),
   is_published: z.boolean(),
@@ -48,6 +49,7 @@ const ArtworkForm = ({ artwork, onSubmit, isSubmitting }: ArtworkFormProps) => {
       title: artwork?.title || "",
       description: artwork?.description || "",
       body: artwork?.body ?? "",
+      price_display: artwork?.price_display ?? "",
       year: artwork?.year || "",
       tags: artwork?.tags?.join(", ") || "",
       is_published: artwork?.is_published ?? true,
@@ -186,6 +188,20 @@ const ArtworkForm = ({ artwork, onSubmit, isSubmitting }: ArtworkFormProps) => {
         <p className="text-xs text-muted-foreground">갤러리에서 작품 클릭 시 뷰어에만 표시됩니다. 줄바꿈 가능</p>
         {errors.body && (
           <p className="text-sm text-destructive">{errors.body.message}</p>
+        )}
+      </div>
+
+      {/* 가격 표시 (price_display) - 문의 모달에서만 공개 */}
+      <div className="space-y-2">
+        <Label htmlFor="price_display">가격 표시</Label>
+        <Input
+          id="price_display"
+          placeholder="예: 1,200,000원 또는 가격 문의"
+          {...register("price_display")}
+        />
+        <p className="text-xs text-muted-foreground">작품 문의하기 클릭 시 문의 모달에서만 표시됩니다. 비우면 &quot;가격 문의&quot;로 표시</p>
+        {errors.price_display && (
+          <p className="text-sm text-destructive">{errors.price_display.message}</p>
         )}
       </div>
 

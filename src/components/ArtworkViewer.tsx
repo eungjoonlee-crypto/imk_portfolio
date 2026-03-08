@@ -1,9 +1,8 @@
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const INSTAGRAM_DM_URL = "https://www.instagram.com/direct/t/imk_atelier";
+import { InquiryModal } from "@/components/InquiryModal";
 
 export interface GalleryArtwork {
   id: string;
@@ -14,6 +13,8 @@ export interface GalleryArtwork {
   medium: string;
   /** 본문 설명 (뷰어에서만 표시) */
   body: string | null;
+  /** 가격 표시 (문의 모달에서 공개, 예: "1,200,000원" 또는 "가격 문의") */
+  price_display?: string | null;
 }
 
 interface ArtworkViewerProps {
@@ -32,6 +33,7 @@ export const ArtworkViewer = ({
   const total = artworks.length;
   const artwork = artworks[currentIndex];
   const touchStartX = useRef<number | null>(null);
+  const [inquiryOpen, setInquiryOpen] = useState(false);
 
   const goPrev = useCallback(() => {
     if (total <= 1) return;
@@ -111,36 +113,39 @@ export const ArtworkViewer = ({
             />
           </div>
 
-          {/* Text + CTA: 모바일에서 스크롤, 터치 스크롤 부드럽게 */}
-          <div
-            className="flex flex-col flex-1 min-h-0 p-5 md:p-8 overflow-y-auto overflow-x-hidden overscroll-contain [touch-action:pan-y] [-webkit-overflow-scrolling:touch]"
-          >
-            <div className="flex-1 space-y-3 md:space-y-4 min-h-0">
-              <h2
-                className="font-serif text-xl md:text-3xl text-foreground leading-tight"
-                style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
-              >
-                {artwork.title}
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                {artwork.medium}
-                {artwork.year ? ` · ${artwork.year}` : ""}
-              </p>
-              {artwork.body && (
-                <p className="text-base md:text-[15px] text-foreground/90 leading-relaxed whitespace-pre-line">
-                  {artwork.body}
+          {/* Text + CTA: 모바일에서 텍스트만 스크롤, 버튼은 항상 하단 고정 */}
+          <div className="flex flex-col flex-1 min-h-0 min-w-0">
+            {/* 스크롤 영역: 제목·설명만, 버튼과 겹치지 않음 */}
+            <div
+              className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain [touch-action:pan-y] [-webkit-overflow-scrolling:touch] p-5 md:p-8 pb-4 md:pb-8"
+            >
+              <div className="space-y-3 md:space-y-4">
+                <h2
+                  className="font-serif text-xl md:text-3xl text-foreground leading-tight"
+                  style={{ fontFamily: "'Noto Sans KR', sans-serif" }}
+                >
+                  {artwork.title}
+                </h2>
+                <p className="text-sm text-muted-foreground">
+                  {artwork.medium}
+                  {artwork.year ? ` · ${artwork.year}` : ""}
                 </p>
-              )}
+                {artwork.body && (
+                  <p className="text-base md:text-[15px] text-foreground/90 leading-relaxed whitespace-pre-line">
+                    {artwork.body}
+                  </p>
+                )}
+              </div>
             </div>
 
-            {/* CTA: 모바일에서 하단 고정 느낌, 터치 타깃 44px 이상 */}
-            <div className="mt-5 pt-5 border-t border-border flex-shrink-0 pb-6">
+            {/* CTA: 항상 하단 고정, 텍스트와 겹치지 않음 */}
+            <div className="flex-shrink-0 border-t border-border bg-card/95 p-4 md:p-8 md:pt-6">
               <Button
                 variant="outline"
                 className="w-full md:w-auto min-h-[44px] px-6 py-3 text-base border-primary/40 text-primary hover:bg-primary/10 hover:text-primary font-medium [touch-action:manipulation]"
-                onClick={() => window.open(INSTAGRAM_DM_URL, "_blank", "noopener,noreferrer")}
+                onClick={() => setInquiryOpen(true)}
               >
-                구매 문의하기
+                작품 문의하기
               </Button>
             </div>
           </div>
@@ -186,6 +191,14 @@ export const ArtworkViewer = ({
       >
         <X className="h-5 w-5" />
       </button>
+
+      {artwork && (
+        <InquiryModal
+          open={inquiryOpen}
+          onOpenChange={setInquiryOpen}
+          artwork={artwork}
+        />
+      )}
     </div>
   );
 };
