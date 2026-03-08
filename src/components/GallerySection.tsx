@@ -115,9 +115,13 @@ const GallerySection = () => {
           </div>
         )}
 
-        {/* Masonry: 컬럼별 flex로 높이 차이 시 빈 공간 없이 자연스럽게 배치 */}
+        {/* Masonry: 컬럼별 flex, 그리드 열 수를 columnCount와 맞춰 빈 열 방지 */}
         {!isLoading && !error && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 pointer-events-auto">
+          <div
+            className={`grid gap-8 lg:gap-10 pointer-events-auto ${
+              columnCount === 1 ? "grid-cols-1" : columnCount === 2 ? "grid-cols-2" : "grid-cols-3"
+            }`}
+          >
             {columnsWithIndices.map((column, colIndex) => (
               <div
                 key={colIndex}
