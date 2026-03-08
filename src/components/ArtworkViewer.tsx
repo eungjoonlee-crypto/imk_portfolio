@@ -91,7 +91,7 @@ export const ArtworkViewer = ({
 
       {/* Content container: 모바일 풀스크린 시트, 데스크톱 중앙 패널 */}
       <div
-        className="relative z-0 flex flex-1 min-h-0 items-center justify-center p-0 pt-12 pb-24 md:p-8 md:pt-16 md:pb-28"
+        className="relative z-0 flex flex-1 min-h-0 items-center justify-center px-2 pt-14 pb-4 md:p-8 md:pt-16 md:pb-28"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -101,10 +101,10 @@ export const ArtworkViewer = ({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
-          className="flex flex-col md:flex-row md:max-w-5xl w-full h-full max-h-[90dvh] md:max-h-[80vh] bg-card/95 backdrop-blur-sm rounded-t-2xl md:rounded-lg overflow-hidden border border-border shadow-2xl"
+          className="flex flex-col md:flex-row md:max-w-5xl w-full h-full max-h-[96dvh] md:max-h-[80vh] bg-card/95 backdrop-blur-sm rounded-t-2xl md:rounded-lg overflow-hidden border border-border shadow-2xl"
         >
-          {/* Image: 모바일에서 비율 고정, 데스크톱 55% */}
-          <div className="relative flex-shrink-0 md:w-[55%] min-h-[35vh] max-h-[45vh] md:max-h-none md:min-h-0 bg-muted">
+          {/* Image: 모바일에서 비중 축소(텍스트 영역 확보), 데스크톱 55% */}
+          <div className="relative flex-shrink-0 md:w-[55%] min-h-[20vh] max-h-[28vh] md:max-h-none md:min-h-0 bg-muted">
             <img
               src={artwork.image}
               alt={artwork.title}
@@ -173,9 +173,9 @@ export const ArtworkViewer = ({
           </>
         )}
 
-        {/* Position indicator: 모바일에서 하단 고정 영역 위 */}
+        {/* Position indicator: 모바일 하단 근처, 데스크톱 뷰어 하단 */}
         {total > 1 && (
-          <div className="absolute bottom-20 md:bottom-4 left-1/2 -translate-x-1/2 z-10 text-sm text-muted-foreground/90 bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full">
+          <div className="absolute bottom-4 md:bottom-4 left-1/2 -translate-x-1/2 z-10 text-sm text-muted-foreground/90 bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-full">
             {currentIndex + 1} / {total}
           </div>
         )}
