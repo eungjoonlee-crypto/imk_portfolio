@@ -34,7 +34,7 @@ const ArtworkCard = ({ image, title, year, medium, index, onClick }: ArtworkCard
         <img
           src={image}
           alt={title}
-          className="w-full h-auto object-cover pointer-events-none"
+          className="w-full h-auto object-cover object-center pointer-events-none"
           loading="lazy"
           draggable={false}
         />
