@@ -23,19 +23,6 @@ const fallbackArtworks: GalleryArtwork[] = [
   { id: "6", image: artwork6, title: "Verdant Spiral", year: "2024", medium: "Acrylic on canvas", body: null },
 ];
 
-// Fisher-Yates 셔플 알고리즘을 사용한 랜덤 정렬 함수
-const shuffleArray = <T,>(array: T[]): T[] => {
-  const shuffled = [...array]; // 원본 배열을 변경하지 않기 위해 복사
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-};
-
-/** 레이아웃 균형을 위해 항상 마지막에 노출할 작품 제목 (쉼표 구분 또는 배열) */
-const PIN_TO_END_TITLES: string[] = ["해바라기"];
-
 /** Masonry: 컬럼 수에 따라 (작품, 원본인덱스)를 열 단위로 나눔 */
 function splitIntoColumnsWithIndices<T>(
   items: T[],
@@ -55,7 +42,6 @@ const GallerySection = () => {
   const columnCount = useColumnCount();
 
   // Use database artworks if available, otherwise use fallback
-  // useMemo: 랜덤 셔플 후, PIN_TO_END_TITLES에 해당하는 작품은 항상 마지막에 배치
   const displayArtworks = useMemo((): GalleryArtwork[] => {
     const baseArtworks: GalleryArtwork[] =
       artworks && artworks.length > 0
@@ -70,11 +56,9 @@ const GallerySection = () => {
           }))
         : fallbackArtworks;
 
-    const shuffled = shuffleArray(baseArtworks);
-    const pinSet = new Set(PIN_TO_END_TITLES.map((t) => t.trim()).filter(Boolean));
-    const pinned = shuffled.filter((a) => pinSet.has(a.title));
-    const rest = shuffled.filter((a) => !pinSet.has(a.title));
-    return [...rest, ...pinned];
+    // Supabase 쿼리에서 이미 order, created_at 순으로 정렬되므로
+    // 여기서는 그대로 반환해 DB에서 지정한 노출 순서를 유지한다.
+    return baseArtworks;
   }, [artworks]);
 
   const openViewer = (index: number) => setViewerIndex(index);
