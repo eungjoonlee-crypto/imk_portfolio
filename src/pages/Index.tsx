@@ -1,11 +1,18 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import Navigation from "@/components/Navigation";
 import HeroBanner from "@/components/HeroBanner";
 import GallerySection from "@/components/GallerySection";
 import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
+import { trackPageView } from "@/lib/trackViews";
 
 const Index = () => {
+  useEffect(() => {
+    // 홈페이지 진입 시 한 번만 page view 기록
+    trackPageView("home");
+  }, []);
+
   return (
     <>
       <Helmet>

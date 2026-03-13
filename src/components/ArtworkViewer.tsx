@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InquiryModal } from "@/components/InquiryModal";
+import { trackArtworkView } from "@/lib/trackViews";
 
 export interface GalleryArtwork {
   id: string;
@@ -34,6 +35,12 @@ export const ArtworkViewer = ({
   const artwork = artworks[currentIndex];
   const touchStartX = useRef<number | null>(null);
   const [inquiryOpen, setInquiryOpen] = useState(false);
+
+  // 작품 뷰어 열릴 때마다 해당 작품 조회수 기록
+  useEffect(() => {
+    if (!artwork?.id) return;
+    trackArtworkView(artwork.id);
+  }, [artwork?.id]);
 
   const goPrev = useCallback(() => {
     if (total <= 1) return;

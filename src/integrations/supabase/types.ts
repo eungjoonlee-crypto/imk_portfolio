@@ -98,6 +98,42 @@ export type Database = {
         }
         Relationships: []
       }
+      page_views: {
+        Row: {
+          id: string
+          path: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          path: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          path?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
+      artwork_views: {
+        Row: {
+          id: string
+          artwork_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          artwork_id: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          artwork_id?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
